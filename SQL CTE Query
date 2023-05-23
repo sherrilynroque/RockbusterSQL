@@ -1,0 +1,33 @@
+Average amount paid by the top 5 customers.
+
+WITH average_amount_by_top_5_customers_cte (customer_id, first_name, last_name, city, country) AS
+(SELECT A. customer_id, A. first_name, A. last_name, C. city, D. country,
+SUM(amount) AS total_amount_paid
+FROM customer A
+INNER JOIN address B ON A. address_id = B. address_id
+INNER JOIN city C ON B. city_id = C. city_id
+INNER JOIN country D ON C. country_id = D. country_id
+INNER JOIN payment E ON A. customer_id = E. customer_id
+WHERE C. city IN
+(SELECT C. city
+FROM customer A
+INNER JOIN address B ON A. address_id = B. address_id
+INNER JOIN city C ON B. city_id = C. city_id
+INNER JOIN country D ON C. country_id = D. country_id
+WHERE D. country IN
+(SELECT D. country
+FROM customer A
+INNER JOIN address B ON A. address_id = B. address_id
+INNER JOIN city C ON B. city_id = C. city_id
+INNER JOIN country D ON C. country_id = D. country_id
+GROUP BY country
+ORDER BY COUNT (customer_id) DESC
+LIMIT 10) -- top 10 countries with the most customer
+GROUP BY C. city, D. country
+ORDER BY COUNT (customer_id)DESC
+LIMIT 10) -- top 10 cities within the top 10 countries
+GROUP BY A. customer_id, C. city, D. country
+ORDER BY total_amount_paid DESC
+LIMIT 5) -- top 5 customer payments in the top 10 cities
+SELECT AVG (total_amount_paid) AS average
+FROM average_amount_by_top_5_customers_cte
