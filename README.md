@@ -8,3 +8,9 @@ Rockbuster Stealth LLC is a movie rental company that used to have stores around
 ## Data
 
 A relational database made of 15 tables that were provided by CareerFoundry can be found [here](https://drive.google.com/file/d/1hVzBWz5ORRbI37HA8p5tAiuZyMOe66yI/view).
+
+## Tools
+
+For this project, the followning tools were used:
+* PostgreSQL
+* DbVisualizer   
